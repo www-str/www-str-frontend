@@ -9,22 +9,23 @@ import axios from 'axios';
 
 function App() {
   const [search, setSearch] = useState("");
-  const [result, setResult] = useState("");
+  const [searchResult, setSearchResult] = useState<any>();
 
   const [modalOpen, setModalOpen] = useState(false);
 
   const ref = useRef<HTMLDivElement>(null);
 
-
-
-  const handlClick = () => {
-    setResult(search);
-    setModalOpen(prev => !prev)
+  const handlClick = async () => {
+    // setModalOpen(prev => !prev)
+    if(search != '') {
+      const data = await axios.get(`${import.meta.env.VITE_API_URL}?key=${import.meta.env.VITE_GOOGLE_API_KEY}&cx=${import.meta.env.VITE_SEARCH_KEY}&q=${search} краснодар`);
+      setSearchResult(data.data.items);
+    }
+    setSearch('');
   }
 
   const handleChangeSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(e.target.value)
-    setResult("")
   }
 
   const handleScroll = (e: React.MouseEvent<HTMLElement>) => {
@@ -57,7 +58,18 @@ function App() {
             <Button onclick={handlClick}>Search</Button>
           </>
         </NarrowContainer>
-        <NarrowContainer classname='h-full mb-3'></NarrowContainer>
+        <NarrowContainer classname='h-full mb-3'>
+          <ul className='flex flex-col items-center p-20 gap-2'>
+            {searchResult && searchResult.map((item: any, idx: number) => (
+              <li key={idx}>
+                <a href={item.link} target='_blank' className='block underline cursor-pointer'>
+                  {item.title}
+                </a>
+              </li>
+            ))}
+          </ul>
+
+        </NarrowContainer>
       </div>
 
       <div className='flex flex-col gap-4 pt-3' ref={ref}>
