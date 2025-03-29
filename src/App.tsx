@@ -2,31 +2,74 @@ import { useRef, useState } from 'react';
 import WideContainer from './components/WideContainer';
 import NarrowContainer from './components/NarrowContainer';
 import AboutBlock from './components/AboutBlock';
-import Logo from './components/Logo';
+import Logo from './components/ui/Logo';
 import FormModal from './components/FormModal';
 import Button from './components/ui/Button';
 import axios from 'axios';
 
+export type questionDataType = {
+  id: number;
+  title: string;
+  text: string;
+  answers: string[];
+}
+
+const questionData: questionDataType[] = [
+  {
+    id: 1,
+    title: "Вопрос 1",
+    text: "Вам нравится сайт?",
+    answers: ["Да", "Нет"],
+  },
+  {
+    id: 2,
+    title: "Вопрос 2",
+    text: "Оцените качество выданных ответов",
+    answers: ["1", "2", "3", "4", "5"],
+  },
+  {
+    id: 3,
+    title: "Вопрос 3",
+    text: "Эта выдача была полезна?",
+    answers: ["Да", "Нет"],
+  },
+]
+
 function App() {
   const [search, setSearch] = useState("");
-  const [searchResult, setSearchResult] = useState<any>();
+  const [searchResult, setSearchResult] = useState([]);
 
-  const [modalOpen, setModalOpen] = useState(false);
+  const [modalOpen, setModalOpen] = useState({ first: true, open: false });
+  const [error, setError] = useState(false);
 
   const ref = useRef<HTMLDivElement>(null);
 
   const handlClick = async () => {
-    // setModalOpen(prev => !prev)
+
     if (search != '') {
       try {
+        setError(false);
         const url = `${import.meta.env.VITE_API_URL}?key=${import.meta.env.VITE_GOOGLE_API_KEY}&cx=${import.meta.env.VITE_SEARCH_KEY}&q=${search}+краснодар`;
         const data = await axios.get(url);
         setSearchResult(data.data.items);
-      } catch (err) {
+        setSearch('');
+        setModalOpen({ first: true, open: false });
+
+        if (modalOpen.first) {
+          setTimeout(() => {
+            setModalOpen({ first: false, open: true });
+          }, 3000)
+        }
+      } catch (err: any) {
+        setError(true);
         console.error(err);
       }
     }
-    setSearch('');
+    if (modalOpen.first) {
+      setTimeout(() => {
+        setModalOpen({ first: false, open: true });
+      }, 3000)
+    }
   }
 
   const handleChangeSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -43,13 +86,13 @@ function App() {
 
   return (
     <div className="flex flex-col bg-gray-200">
-      {modalOpen && <FormModal />}
+      {modalOpen.open && <FormModal onClose={() => setModalOpen({ first: false, open: false })} data={questionData} />}
 
       <div className="flex flex-col gap-4">
-        <WideContainer classname='flex items-center gap-2 min-h-20'>
+        <WideContainer classname='flex items-center gap-2 max-h-20 py-6'>
           <>
             <Logo />
-            <a className="ml-auto mr-0 cursor-pointer text-[#ef1d27] font-medium" onClick={handleScroll}>About</a>
+            <a className="ml-auto mr-0 cursor-pointer text-[#ef1d27] font-medium" onClick={handleScroll}>О нас</a>
           </>
         </WideContainer>
 
@@ -61,12 +104,12 @@ function App() {
               type="text" value={search} onChange={handleChangeSearch}
               onKeyDown={(e) => { e.key === 'Enter' && handlClick() }}
             />
-            <Button onclick={handlClick}>Search</Button>
+            <Button onclick={handlClick}>Найти</Button>
           </>
         </NarrowContainer>
         <NarrowContainer classname='h-full mb-3'>
-          <ul className='flex flex-col px-20 py-16 gap-4'>
-            {searchResult ? searchResult.map((item: any, idx: number) => (
+          <ul className='flex flex-col px-5 lg:px-20 py-16 gap-4'>
+            {searchResult.length > 0 ? searchResult.map((item: any, idx: number) => (
               <li key={idx} title={item.snippet} className='cursor-pointer list-disc'>
                 <a href={item.link} target='_blank' className=' transition hover:underline hover:text-[#ef1d27]'>
                   {item.title}
@@ -74,8 +117,13 @@ function App() {
                 <p className='text-sm text-gray-500'>{item.snippet}</p>
               </li>
             )) : (
-              <div className="text-xl font-bold text-gray-700">Nothing here yet..</div>
+              <div className="text-xl font-bold text-gray-700">
+                {error ? (
+                  <span className='text-red-600'>Что-то пошло не так, попробуйте позже</span>
+                ) : "Пусто.."}
+              </div>
             )}
+
           </ul>
 
         </NarrowContainer>
@@ -94,11 +142,11 @@ function App() {
           </>
         </WideContainer>
 
-        <WideContainer classname='py-20 max-h-12 flex justify-between'>
+        <WideContainer classname='py-20 lg:max-h-12 flex flex-col lg:flex-row items-center gap-6 justify-between'>
           <>
             <Logo />
-            <div className="l-auto flex items-center gap-6">
-              <p className='text-lg font-bold'>Team: STR</p>
+            <div className="l-auto flex items-center justify-center lg:justify-start flex-wrap gap-6">
+              <p className='text-lg font-bold'>Команда: STR</p>
               <span className='h-6 w-0.5 bg-gray-400'></span>
               <p className='text-lg font-medium'>Elizabeth</p>
               <p className='text-lg font-medium'>Nikka</p>
