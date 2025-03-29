@@ -4,7 +4,10 @@ type LogoType = {
 
 const Logo = ({ className }: LogoType) => {
     return (
-        <img src="/logo.svg" className={`w-auto h-16 ${className}`} />
+        <div className="flex items-center">
+            <img src="/logo.svg" className={`w-auto h-16 ${className}`} />
+            <p className="text-red-500">WWW-STR</p>
+        </div>
     )
 }
 

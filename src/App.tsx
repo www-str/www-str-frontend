@@ -68,7 +68,7 @@ function App() {
     if (modalOpen.first) {
       setTimeout(() => {
         setModalOpen({ first: false, open: true });
-      }, 3000)
+      }, 2000)
     }
   }
 
