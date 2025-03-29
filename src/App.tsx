@@ -17,9 +17,14 @@ function App() {
 
   const handlClick = async () => {
     // setModalOpen(prev => !prev)
-    if(search != '') {
-      const data = await axios.get(`${import.meta.env.VITE_API_URL}?key=${import.meta.env.VITE_GOOGLE_API_KEY}&cx=${import.meta.env.VITE_SEARCH_KEY}&q=${search} краснодар`);
-      setSearchResult(data.data.items);
+    if (search != '') {
+      try {
+        const url = `${import.meta.env.VITE_API_URL}?key=${import.meta.env.VITE_GOOGLE_API_KEY}&cx=${import.meta.env.VITE_SEARCH_KEY}&q=${search}+краснодар`;
+        const data = await axios.get(url);
+        setSearchResult(data.data.items);
+      } catch (err) {
+        console.error(err);
+      }
     }
     setSearch('');
   }
@@ -40,33 +45,37 @@ function App() {
     <div className="flex flex-col bg-gray-200">
       {modalOpen && <FormModal />}
 
-      <div className="h-screen flex flex-col gap-4">
-        <WideContainer classname='flex items-center gap-2 max-h-20'>
+      <div className="flex flex-col gap-4">
+        <WideContainer classname='flex items-center gap-2 min-h-20'>
           <>
             <Logo />
             <a className="ml-auto mr-0 cursor-pointer text-[#ef1d27] font-medium" onClick={handleScroll}>About</a>
           </>
         </WideContainer>
 
-        <NarrowContainer classname='p-4 flex gap-2 items-start'>
+        <NarrowContainer classname='p-4 flex gap-2 items-start' >
           <>
             <input
               placeholder='Search smth..'
-              className='bg-gray-200 font-medium text-black rounded-xl px-8 h-full w-full outline-none'
+              className='bg-gray-200 font-medium text-black rounded-xl px-8 py-4 h-full w-full outline-none'
               type="text" value={search} onChange={handleChangeSearch}
+              onKeyDown={(e) => { e.key === 'Enter' && handlClick() }}
             />
             <Button onclick={handlClick}>Search</Button>
           </>
         </NarrowContainer>
         <NarrowContainer classname='h-full mb-3'>
-          <ul className='flex flex-col items-center p-20 gap-2'>
-            {searchResult && searchResult.map((item: any, idx: number) => (
-              <li key={idx}>
-                <a href={item.link} target='_blank' className='block underline cursor-pointer'>
+          <ul className='flex flex-col px-20 py-16 gap-4'>
+            {searchResult ? searchResult.map((item: any, idx: number) => (
+              <li key={idx} title={item.snippet} className='cursor-pointer list-disc'>
+                <a href={item.link} target='_blank' className=' transition hover:underline hover:text-[#ef1d27]'>
                   {item.title}
                 </a>
+                <p className='text-sm text-gray-500'>{item.snippet}</p>
               </li>
-            ))}
+            )) : (
+              <div className="text-xl font-bold text-gray-700">Nothing here yet..</div>
+            )}
           </ul>
 
         </NarrowContainer>
