@@ -23,12 +23,10 @@ const SearchSection = ({ modalOpen, setModalOpen }: ISearchSection) => {
 
     const handlClick = async () => {
         if (search == '' || prevSearch.trim().toLowerCase() === search.trim().toLowerCase()) return;
-
         try {
             setError(false);
 
-            const url = `${import.meta.env.VITE_API_URL}?key=${import.meta.env.VITE_GOOGLE_API_KEY
-                }&cx=${import.meta.env.VITE_SEARCH_KEY}?safe=active&q=${search}+${bloggerChecked ? "блогеры" : ""}+краснодар`;
+            const url = `${import.meta.env.VITE_API_URL}?key=${import.meta.env.VITE_GOOGLE_API_KEY}&cx=${import.meta.env.VITE_SEARCH_KEY}&safe=active&lr=lang_ru&gl=ru&q=${search}`;
             const data = await axios.get(url);
 
             setSearchResult(data.data.items);
