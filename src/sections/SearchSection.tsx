@@ -55,7 +55,7 @@ const SearchSection = ({ modalOpen, setModalOpen }: ISearchSection) => {
 
     return (
         <>
-            <NarrowContainer classname='p-4 flex gap-2' >
+            <NarrowContainer classname='p-4 flex flex-wrap md:flex-nowrap justify-between md:justify-end gap-2' >
                 <>
                     <input
                         placeholder='Найти..'
