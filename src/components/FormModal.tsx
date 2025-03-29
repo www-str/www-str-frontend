@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { questionDataType } from '../App';
 import Button from './ui/Button'
+import { questionDataType } from '../utils/types';
 
 interface IFormModal {
     data: questionDataType[];
@@ -33,8 +33,8 @@ const FormModal = ({ data, onClose }: IFormModal) => {
 
     return (
         <div className='fixed z-10 inset-x-5 lg:right-10 lg:left-auto bottom-5 lg:bottom-10 lg:w-120 bg-red-200 rounded-2xl flex flex-col gap-4 p-6'>
-            <div className="">
-                <span className='font-medium text-xl'>{data[curQuestion].title}</span>
+            <div>
+                <span className='font-medium text-xl'>Опрос. {data[curQuestion].title}</span>
                 <p>{data[curQuestion].text}</p>
             </div>
             <div className="flex items-center justify-between flex-wrap gap-4">
