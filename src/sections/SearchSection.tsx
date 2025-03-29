@@ -28,7 +28,7 @@ const SearchSection = ({ modalOpen, setModalOpen }: ISearchSection) => {
             setError(false);
 
             const url = `${import.meta.env.VITE_API_URL}?key=${import.meta.env.VITE_GOOGLE_API_KEY
-                }&cx=${import.meta.env.VITE_SEARCH_KEY}&q=${search}+${bloggerChecked ? "блогеры" : ""}+краснодар`;
+                }&cx=${import.meta.env.VITE_SEARCH_KEY}?safe=active&q=${search}+${bloggerChecked ? "блогеры" : ""}+краснодар`;
             const data = await axios.get(url);
 
             setSearchResult(data.data.items);
