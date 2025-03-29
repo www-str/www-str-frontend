@@ -3,6 +3,7 @@ import NarrowContainer from '../components/NarrowContainer'
 import Button from '../components/ui/Button'
 import axios from 'axios';
 import { modalOpenType } from '../utils/types';
+import Grade from '../components/ui/Grade';
 
 interface ISearchSection {
     modalOpen: modalOpenType;
@@ -77,6 +78,7 @@ const SearchSection = ({ modalOpen, setModalOpen }: ISearchSection) => {
                                 {item.title}
                             </a>
                             <p className='text-sm text-gray-500'>{item.snippet}</p>
+                            <Grade link={item.link} />
                         </li>
                     )) : (
                         <div className="text-xl font-bold text-gray-700">
@@ -85,9 +87,7 @@ const SearchSection = ({ modalOpen, setModalOpen }: ISearchSection) => {
                             ) : "Пусто.."}
                         </div>
                     )}
-
                 </ul>
-
             </NarrowContainer>
         </>
     )
