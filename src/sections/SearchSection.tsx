@@ -14,6 +14,7 @@ const SearchSection = ({ modalOpen, setModalOpen }: ISearchSection) => {
     const [prevSearch, setPrevSearch] = useState("");
     const [searchResult, setSearchResult] = useState([]);
     const [error, setError] = useState(false);
+    const [bloggerChecked, setBloggerChecked] = useState(false);
 
     const handleChangeSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
         setSearch(e.target.value)
@@ -25,7 +26,8 @@ const SearchSection = ({ modalOpen, setModalOpen }: ISearchSection) => {
         try {
             setError(false);
 
-            const url = `${import.meta.env.VITE_API_URL}?key=${import.meta.env.VITE_GOOGLE_API_KEY}&cx=${import.meta.env.VITE_SEARCH_KEY}&q=${search}+краснодар`;
+            const url = `${import.meta.env.VITE_API_URL}?key=${import.meta.env.VITE_GOOGLE_API_KEY
+                }&cx=${import.meta.env.VITE_SEARCH_KEY}&q=${search}+${bloggerChecked ? "блогеры" : ""}+краснодар`;
             const data = await axios.get(url);
 
             setSearchResult(data.data.items);
@@ -45,16 +47,25 @@ const SearchSection = ({ modalOpen, setModalOpen }: ISearchSection) => {
         }
     }
 
+    const toggleBloggerChecked = () => {
+        setBloggerChecked(!bloggerChecked)
+        setPrevSearch('');
+    }
+
     return (
         <>
-            <NarrowContainer classname='p-4 flex gap-2 items-start' >
+            <NarrowContainer classname='p-4 flex gap-2' >
                 <>
                     <input
                         placeholder='Найти..'
-                        className='bg-gray-200 font-medium text-black rounded-xl px-8 py-4 h-full w-full outline-none'
+                        className='bg-gray-200 font-medium text-black rounded-xl px-8 py-4 min-h-full w-full outline-none'
                         type="text" value={search} onChange={handleChangeSearch}
                         onKeyDown={(e) => { e.key === 'Enter' && handlClick() }}
                     />
+                    <div className="bg-gray-200 rounded-xl px-8 min-h-full inline-flex items-center gap-2 cursor-pointer" onClick={toggleBloggerChecked}>
+                        <input type='checkbox' checked={bloggerChecked} id='bloggerCheckbox' className='w-4 h-4' />
+                        <label htmlFor="bloggerCheckbox">Блогеры</label>
+                    </div>
                     <Button onclick={handlClick}>Найти</Button>
                 </>
             </NarrowContainer>
