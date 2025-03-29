@@ -17,5 +17,5 @@ jobs:
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         port: 22
         script: |
-         cd ${{ secrets.PROJ_DIR }}
+         cd /root/www-str-frontend/
          git pull origin main
