@@ -1,9 +1,9 @@
 import { Dispatch, SetStateAction, useState } from 'react'
 import NarrowContainer from '../components/NarrowContainer'
 import Button from '../components/ui/Button'
-import axios from 'axios';
 import { modalOpenType } from '../utils/types';
 import Grade from '../components/ui/Grade';
+import { getSearch } from '../api/searchApi';
 
 interface ISearchSection {
     modalOpen: modalOpenType;
@@ -25,14 +25,11 @@ const SearchSection = ({ modalOpen, setModalOpen }: ISearchSection) => {
         if (search == '' || prevSearch.trim().toLowerCase() === search.trim().toLowerCase()) return;
         try {
             setError(false);
+            const data = await getSearch({search, isBloggerChecked: bloggerChecked})
 
-            const url = `${import.meta.env.VITE_API_URL}?key=${import.meta.env.VITE_GOOGLE_API_KEY}&cx=${import.meta.env.VITE_SEARCH_KEY}&safe=active&lr=lang_ru&gl=ru&q=${search}`;
-            const data = await axios.get(url);
-
-            setSearchResult(data.data.items);
+            setSearchResult(data.items);
             setModalOpen({ first: true, open: false });
             setPrevSearch(search);
-
 
             if (modalOpen.first) {
                 setTimeout(() => {
@@ -68,10 +65,11 @@ const SearchSection = ({ modalOpen, setModalOpen }: ISearchSection) => {
                     <Button onclick={handlClick}>Найти</Button>
                 </>
             </NarrowContainer>
+
             <NarrowContainer classname='h-full'>
                 <ul className='flex flex-col px-5 lg:px-20 py-8 lg:py-16 gap-4'>
                     {searchResult.length > 0 ? searchResult.map((item: any, idx: number) => (
-                        <li key={idx} title={item.snippet} className='cursor-pointer lg:list-disc'>
+                        <li key={`${idx}-${item.link}`} title={item.snippet} className='cursor-pointer lg:list-disc'>
                             <a href={item.link} target='_blank' className=' transition hover:underline hover:text-[#ef1d27]'>
                                 {item.title}
                             </a>

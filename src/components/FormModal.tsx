@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import Button from './ui/Button'
 import { questionDataType } from '../utils/types';
-import axios from 'axios';
+// import { sendForm } from '../api';
 
 interface IFormModal {
     data: questionDataType[];
@@ -11,26 +11,14 @@ interface IFormModal {
 const FormModal = ({ data, onClose }: IFormModal) => {
     const [curQuestion, setCurQuestion] = useState(0);
 
-    const sendForm = async (id: string, answer: string) => {
-        try {
-            await axios.post('https://meowmur.ru/api/questions/set', {
-                id: id,
-                response: answer,
-            })
-        } catch (err) {
-            console.error(err);
-        }
-    }
-
     const handleSelectAnsw = (answer: string) => {
         if (data.length - 1 === curQuestion) {
             onClose();
             return;
         }
         setCurQuestion(prev => prev + 1);
-        sendForm(String(curQuestion + 1), answer)
+        // sendForm({ id: curQuestion + 1, response: answer })
     }
-
 
     return (
         <div className='fixed z-10 inset-x-5 lg:right-10 lg:left-auto bottom-5 lg:bottom-10 lg:w-120 bg-red-200 rounded-2xl flex flex-col gap-4 p-6'>
