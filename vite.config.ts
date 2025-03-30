@@ -8,6 +8,7 @@ export default defineConfig({
   server: {
     host: true,
     port: 81,
+    allowedHosts: ["meowmur.ru"],
     watch: {
       usePolling: true,
     },
