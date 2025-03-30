@@ -1,16 +1,7 @@
 import axios from "axios";
+import { searchType } from "../utils/types";
 
-type searchType = {
-    search: string;
-    isBloggerChecked: boolean;
-}
-
-type resType = {
-    items: any
-}
-
-
-export async function getSearch({ search, isBloggerChecked }: searchType): Promise<resType> {
+export async function getSearch({ search, isBloggerChecked }: searchType): Promise<{ items: any }> {
     try {
         const baseURL = import.meta.env.VITE_API_URL;
         const googleKey = import.meta.env.VITE_GOOGLE_API_KEY;
@@ -21,10 +12,11 @@ export async function getSearch({ search, isBloggerChecked }: searchType): Promi
                 key: googleKey,
                 cx: searchKey,
                 safe: "active",
-                q: `${search}+${isBloggerChecked ? "блогеры" : ""}+краснодар`
+                q: `${search}+${isBloggerChecked && "блогеры"}+краснодар`
             }
         });
         return res.data;
+
     } catch (err: any) {
         console.error(err);
         throw new Error(err);

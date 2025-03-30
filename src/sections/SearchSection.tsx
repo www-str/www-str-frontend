@@ -25,7 +25,7 @@ const SearchSection = ({ modalOpen, setModalOpen }: ISearchSection) => {
         if (search == '' || prevSearch.trim().toLowerCase() === search.trim().toLowerCase()) return;
         try {
             setError(false);
-            const data = await getSearch({search, isBloggerChecked: bloggerChecked})
+            const data = await getSearch({ search, isBloggerChecked: bloggerChecked })
 
             setSearchResult(data.items);
             setModalOpen({ first: true, open: false });
@@ -36,7 +36,6 @@ const SearchSection = ({ modalOpen, setModalOpen }: ISearchSection) => {
                     setModalOpen({ first: false, open: true });
                 }, 3000)
             }
-
         } catch (err: any) {
             setError(true);
             console.error(err);
@@ -58,16 +57,19 @@ const SearchSection = ({ modalOpen, setModalOpen }: ISearchSection) => {
                         type="text" value={search} onChange={handleChangeSearch}
                         onKeyDown={(e) => { e.key === 'Enter' && handlClick() }}
                     />
-                    <div className="bg-gray-200 rounded-xl px-8 min-h-full inline-flex items-center gap-2 cursor-pointer" onClick={toggleBloggerChecked}>
-                        <input type='checkbox' checked={bloggerChecked} id='bloggerCheckbox' className='w-4 h-4' />
+
+                    <div className="bg-gray-200 rounded-xl px-8 min-h-full inline-flex items-center gap-2 *:cursor-pointer">
+                        <input type='checkbox' checked={bloggerChecked} onChange={toggleBloggerChecked} id='bloggerCheckbox' className='w-4 h-4' />
                         <label htmlFor="bloggerCheckbox">Блогеры</label>
                     </div>
+
                     <Button onclick={handlClick}>Найти</Button>
                 </>
             </NarrowContainer>
 
             <NarrowContainer classname='h-full'>
                 <ul className='flex flex-col px-5 lg:px-20 py-8 lg:py-16 gap-4'>
+
                     {searchResult.length > 0 ? searchResult.map((item: any, idx: number) => (
                         <li key={`${idx}-${item.link}`} title={item.snippet} className='cursor-pointer lg:list-disc'>
                             <a href={item.link} target='_blank' className=' transition hover:underline hover:text-[#ef1d27]'>
@@ -76,13 +78,17 @@ const SearchSection = ({ modalOpen, setModalOpen }: ISearchSection) => {
                             <p className='text-sm text-gray-500'>{item.snippet}</p>
                             <Grade link={item.link} />
                         </li>
+
                     )) : (
+
                         <div className="text-xl font-bold text-gray-700">
                             {error ? (
                                 <span className='text-red-600'>Что-то пошло не так, попробуйте позже</span>
                             ) : "Пусто.."}
                         </div>
+
                     )}
+
                 </ul>
             </NarrowContainer>
         </>
