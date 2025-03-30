@@ -33,6 +33,8 @@ const FormModal = ({ data, onClose }: IFormModal) => {
                     ))}
                 </div>
             </div>
+
+            <button onClick={onClose} className='absolute z-20 right-4 top-2 text-[#ef1d27] text-2xl font-medium cursor-pointer'>x</button>
         </div>
     )
 }

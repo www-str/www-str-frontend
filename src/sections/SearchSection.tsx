@@ -1,8 +1,9 @@
 import { Dispatch, SetStateAction, useState } from 'react'
 import NarrowContainer from '../components/NarrowContainer'
 import Button from '../components/ui/Button'
-import { modalOpenType } from '../utils/types';
+import { modalOpenType, searchRespItemType } from '../utils/types';
 import Grade from '../components/ui/Grade';
+// import { getSearch } from '../api';
 import { getSearch } from '../api/searchApi';
 
 interface ISearchSection {
@@ -13,7 +14,7 @@ interface ISearchSection {
 const SearchSection = ({ modalOpen, setModalOpen }: ISearchSection) => {
     const [search, setSearch] = useState("");
     const [prevSearch, setPrevSearch] = useState("");
-    const [searchResult, setSearchResult] = useState([]);
+    const [searchResult, setSearchResult] = useState<searchRespItemType[]>([]);
     const [error, setError] = useState(false);
     const [bloggerChecked, setBloggerChecked] = useState(false);
 
@@ -25,8 +26,8 @@ const SearchSection = ({ modalOpen, setModalOpen }: ISearchSection) => {
         if (search == '' || prevSearch.trim().toLowerCase() === search.trim().toLowerCase()) return;
         try {
             setError(false);
-            const data = await getSearch({ search, isBloggerChecked: bloggerChecked })
-
+            const data = await getSearch({ search, isBloggerChecked: bloggerChecked });
+            
             setSearchResult(data.items);
             setModalOpen({ first: true, open: false });
             setPrevSearch(search);
@@ -43,7 +44,7 @@ const SearchSection = ({ modalOpen, setModalOpen }: ISearchSection) => {
     }
 
     const toggleBloggerChecked = () => {
-        setBloggerChecked(!bloggerChecked)
+        setBloggerChecked(!bloggerChecked);
         setPrevSearch('');
     }
 

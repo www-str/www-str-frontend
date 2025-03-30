@@ -1,7 +1,7 @@
-import { formType, gradeType, searchType } from "../utils/types";
+import { formType, gradeType, searchRespType, searchType } from "../utils/types";
 import axios from "./axios";
 
-export async function getSearch({ search, isBloggerChecked }: searchType): Promise<object> {
+export async function getSearch({ search, isBloggerChecked }: searchType): Promise<searchRespType> {
     try {
         const res = await axios.get(`/search/get`, {
             params: {
